@@ -1,0 +1,144 @@
+/*======== 页面全局设置 ========*/
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+  background: radial-gradient(circle at center, #001f3f, #000814);
+  color: #00eaff;
+  overflow: hidden;
+}
+
+/*======== 布局主容器 ========*/
+.layout {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  padding: 1vh 1vw;
+  box-sizing: border-box;
+}
+
+/*======== 左右模块 ========*/
+.left-panel,
+.right-panel {
+  width: 22vw;
+  background: rgba(0, 40, 80, 0.25);
+  border: 1px solid rgba(0, 200, 255, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 180, 255, 0.2);
+}
+
+/*======== 中央区域 ========*/
+.center-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 1vw;
+}
+
+/*======== 标题两侧按钮布局 ========*/
+.header {
+  display: flex;
+  align-items: flex-start;        /* 顶对齐 */
+  justify-content: space-between; /* 左右分布 */
+  width: 100%;
+  gap: 2vw;                       /* 按钮与标题距离 */
+  margin-top: -80vh;               /* 控制整体垂直位置 */
+}
+
+/*======== 左右按钮列 ========*/
+.nav-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2vh;                       /* 按钮间距 */
+}
+
+/*======== 中间标题与时钟区域 ========*/
+.title-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 40vw;                /* 给标题区留宽度 */
+}
+
+.title-col h1 {
+  font-size: calc(2vw + 1vh);
+  text-shadow: 0 0 25px #00bfff;
+  letter-spacing: 2px;
+  margin: 0;
+  text-align: center;
+}
+
+/*======== 时钟样式 ========*/
+#clock {
+  margin-top: 2vh;
+  text-align: center;
+  font-size: calc(1vw + 0.5vh);
+  color: #00eaff;
+  letter-spacing: 2px;
+  text-shadow:
+    0 0 10px rgba(0, 180, 255, 0.8),
+    0 0 20px rgba(0, 180, 255, 0.4),
+    0 0 30px rgba(0, 180, 255, 0.2);
+  font-weight: 500;
+  user-select: none;
+}
+
+/*======== 按钮直角风格 ========*/
+.nav-btn {
+  width: 9vw;
+  min-width: 110px;
+  height: 6vh;
+  min-height: 44px;
+  background: rgba(0, 40, 80, 0.6);
+  color: #00eaff;
+  border: 1px solid rgba(0, 200, 255, 0.5);
+  border-radius: 0;               /* ← 直角 */
+  font-size: calc(0.85vw + 0.45vh);
+  cursor: pointer;
+  text-shadow: 0 0 8px #00bfff;
+  box-shadow: 0 0 15px rgba(0,180,255,0.2);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/*======== 悬停高亮 ========*/
+.nav-btn:hover {
+  background: rgba(0, 100, 180, 0.8);
+  box-shadow:
+    0 0 15px rgba(0,200,255,0.5),
+    0 0 25px rgba(0,200,255,0.3);
+  transform: translateY(-2px);
+}
+
+/*======== 底部模块 ========*/
+.bottom-panel {
+  position: absolute;
+  bottom: 2vh;
+  left: 24vw;
+  width: calc(100vw - 46vw - 2vw);
+  height: 20vh;
+  background: rgba(0, 40, 80, 0.25);
+  border: 1px solid rgba(0, 200, 255, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 180, 255, 0.2);
+}
+
+/*======== 小屏优化 ========*/
+@media (max-width: 1200px) {
+  .nav-btn {
+    width: 12vw;
+    font-size: calc(1vw + 0.5vh);
+  }
+  .title-col {
+    min-width: 50vw;
+  }
+}
