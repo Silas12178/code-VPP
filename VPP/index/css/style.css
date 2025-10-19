@@ -1,144 +1,489 @@
-/*======== 页面全局设置 ========*/
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-  font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
-  background: radial-gradient(circle at center, #001f3f, #000814);
-  color: #00eaff;
-  overflow: hidden;
+/* ====== 全局样式 ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/*======== 布局主容器 ========*/
-.layout {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
-  padding: 1vh 1vw;
-  box-sizing: border-box;
+/* ====== 蓝色科技底面 ====== */
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #021B79, #0575E6);
+    font-family: "Microsoft YaHei", sans-serif;
+    overflow: hidden;
 }
 
-/*======== 左右模块 ========*/
-.left-panel,
+/* ====== 主容器布局 ====== */
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* ====== 左侧标题区域 ====== */
+.left-panel {
+    width: 75%;          /* 原70%，给地图更大横向空间 */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: visible;   /* 防止地图被裁切 */
+}
+
+
+/* ====== 自适应标题 ====== */
+.title {
+    color: #E0F7FF !important;
+    text-shadow: 0 0 10px #33BBFF;
+    font-weight: bold;
+    text-align: center;
+    font-size: clamp(24px, 4vw, 60px);
+    transform: translateY(40%);
+}
+
+/* ====== 右侧卡片区域 ====== */
 .right-panel {
-  width: 22vw;
-  background: rgba(0, 40, 80, 0.25);
-  border: 1px solid rgba(0, 200, 255, 0.2);
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 180, 255, 0.2);
+    width: 33.33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/*======== 中央区域 ========*/
-.center-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: 0 1vw;
+/* ====== 卡片整体分布 ====== */
+.card-group {
+    width: 80%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly; /* ← 改为均匀分布，减少间距 */
+    align-items: center;
+    gap: 3%; /* ← 控制卡片间距，原先自动分配，改为3%即可 */
 }
 
-/*======== 标题两侧按钮布局 ========*/
-.header {
-  display: flex;
-  align-items: flex-start;        /* 顶对齐 */
-  justify-content: space-between; /* 左右分布 */
-  width: 100%;
-  gap: 2vw;                       /* 按钮与标题距离 */
-  margin-top: -80vh;               /* 控制整体垂直位置 */
+/* ====== 通用卡片样式 ====== */
+.small-card,
+.large-card {
+    width: 100%;
+    background: rgba(173, 216, 230, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 180, 255, 0.3);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
 }
 
-/*======== 左右按钮列 ========*/
-.nav-col {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2vh;                       /* 按钮间距 */
+.small-card:hover,
+.large-card:hover {
+    box-shadow: 0 0 25px rgba(0, 200, 255, 0.5);
 }
 
-/*======== 中间标题与时钟区域 ========*/
-.title-col {
+/* ====== 小卡片尺寸（上下） ====== */
+.small-card {
+    height: 20%;
+}
+
+/* ====== 大卡片尺寸（中间） ====== */
+.large-card {
+    height: 80%;
+}
+/* ====== 时钟模块样式 ====== */
+.clock-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #E0F7FF;
+    font-family: "Consolas", "Microsoft YaHei", monospace;
+    text-shadow: 0 0 8px #33BBFF;
+}
+
+/* ====== “北京时间”标签 ====== */
+.clock-label {
+    font-size: clamp(14px, 1.2vw, 22px);
+    margin-bottom: 6px;
+    opacity: 0.9;
+}
+
+/* ====== 时钟显示文字 ====== */
+#clock {
+    font-size: clamp(16px, 1.6vw, 28px);
+    font-weight: bold;
+}
+
+/* ====== 关闭终端按钮 ====== */
+.exit-btn {
+    width: 60%;
+    height: 40%;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #0466C8, #0096C7);
+    color: #E0F7FF;
+    font-size: clamp(16px, 1.3vw, 22px);
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 180, 255, 0.4);
+    transition: all 0.3s ease;
+}
+.exit-btn:hover {
+    background: linear-gradient(90deg, #0096C7, #00B4D8);
+    box-shadow: 0 0 25px rgba(0, 200, 255, 0.6);
+}
+
+/* ====== 弹窗遮罩层 ====== */
+.modal {
+    display: none; /* 默认隐藏 */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+/* ====== 弹窗内容区 ====== */
+.modal-content {
+    background: rgba(10, 50, 100, 0.9);
+    border-radius: 16px;
+    padding: 30px 40px;
+    text-align: center;
+    color: #E0F7FF;
+    box-shadow: 0 0 25px rgba(0, 180, 255, 0.4);
+}
+
+/* ====== 弹窗按钮样式 ====== */
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-btn {
+    width: 80px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.modal-btn.yes {
+    background-color: #00B4D8;
+    color: #fff;
+}
+.modal-btn.no {
+    background-color: #555;
+    color: #fff;
+}
+
+.modal-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ====== 下方卡片作为按钮 ====== */
+.exit-card {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.exit-card:hover {
+    background: linear-gradient(90deg, #0096C7, #00B4D8);
+    box-shadow: 0 0 25px rgba(0, 200, 255, 0.6);
+}
+
+/* ====== 按钮文字 ====== */
+.exit-text {
+    color: #E0F7FF;
+    font-size: clamp(16px, 1.3vw, 22px);
+    font-weight: bold;
+    text-shadow: 0 0 8px #33BBFF;
+}
+
+/* ====== 中国地图区域 ====== */
+.map-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 10px;
+}
+
+/* ====== 地图标题 ====== */
+.map-title {
+    color: #E0F7FF;
+    font-size: clamp(16px, 1.5vw, 28px);
+    font-weight: bold;
+    text-shadow: 0 0 10px #33BBFF;
+    margin-bottom: 5px;
+}
+
+/* ====== 地图主体区域 ====== */
+#chinaMap {
+    width: 90%;
+    height: 85%;
+}
+/* ====== 中国地图容器保底高度与充满父级 ====== */
+.large-card {
+    display: flex;              /* 让内部高度按父盒子撑满 */
+    align-items: stretch;
+}
+.map-container {
+    width: 100%;
+    height: 100%;               /* 关键：父容器给出百分比高度 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 10px;
+    gap: 6px;
+}
+.map-title {
+    color: #E0F7FF;
+    font-size: clamp(16px, 1.5vw, 28px);
+    font-weight: bold;
+    text-shadow: 0 0 10px #33BBFF;
+}
+#chinaMap {
+    width: 92%;
+    height: 90%;               /* 关键：地图本身填满父容器 */
+    min-height: 320px;          /* 保底高度，防止为 0 看不到 */
+}
+.left-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-top: 5%;
+}
+.map-left {
+    width: 95%;          /* 原95%或更小的都改成95% */
+    height: 70%;
+    margin-top: 2%;
+    min-height: 400px;
+    margin-left: 0;      /* 去掉10%的左偏移 */
+}
+/* ====== 字幕滚动条样式 ====== */
+#subtitle-bar {
+    width: 80%;
+    height: 35px;
+    overflow: hidden;
+    white-space: nowrap;
+    border-radius: 8px;
+    background: rgba(0, 180, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+    margin-top: 35px;
+    position: relative;
+}
+
+#subtitle-text {
+    display: inline-block;
+    position: absolute;
+    left: 100%;
+    color: #E0F7FF;
+    font-size: clamp(14px, 1.2vw, 20px);
+    text-shadow: 0 0 8px #33BBFF;
+    animation: scroll-text 15s linear infinite;
+}
+
+/* ====== 滚动动画 ====== */
+@keyframes scroll-text {
+    from { left: 100%; }
+    to { left: -100%; }
+}
+/* ====== ECharts 悬浮卡片淡入效果（辅助） ====== */
+.echarts-tooltip {
+    border-radius: 10px;
+    backdrop-filter: blur(6px);
+    transition: opacity .2s ease;
+}
+#subtitle-bar {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 70%;
+  position: relative;
+}
+
+#subtitle-text {
+  position: relative;
+  display: inline-block;
+  will-change: transform;
+}
+.inner-card {
+  width: 90%;
+  margin: 15px auto;
+  padding: 25px 10px;
+  background: rgba(20, 66, 114, 0.6);
+  border: 2px solid #00B4D8;
+  border-radius: 0; /* 直角 */
+  color: #E0F7FF;
+  font-size: 22px;
+  text-align: center;
+  box-shadow: 0 0 10px #0096C7;
+  display: block; /* 关键：确保竖排显示 */
+}
+
+.top-card {
+  margin-top: 40px;
+}
+
+.bottom-card {
+  margin-top: 30px;
+}
+.large-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  min-width: 40vw;                /* 给标题区留宽度 */
+  padding-top: 40px;
 }
-
-.title-col h1 {
-  font-size: calc(2vw + 1vh);
-  text-shadow: 0 0 25px #00bfff;
-  letter-spacing: 2px;
-  margin: 0;
-  text-align: center;
-}
-
-/*======== 时钟样式 ========*/
-#clock {
-  margin-top: 2vh;
-  text-align: center;
-  font-size: calc(1vw + 0.5vh);
-  color: #00eaff;
-  letter-spacing: 2px;
-  text-shadow:
-    0 0 10px rgba(0, 180, 255, 0.8),
-    0 0 20px rgba(0, 180, 255, 0.4),
-    0 0 30px rgba(0, 180, 255, 0.2);
-  font-weight: 500;
-  user-select: none;
-}
-
-/*======== 按钮直角风格 ========*/
-.nav-btn {
-  width: 9vw;
-  min-width: 110px;
-  height: 6vh;
-  min-height: 44px;
-  background: rgba(0, 40, 80, 0.6);
-  color: #00eaff;
-  border: 1px solid rgba(0, 200, 255, 0.5);
-  border-radius: 0;               /* ← 直角 */
-  font-size: calc(0.85vw + 0.45vh);
+.inner-card:hover {
+  background: rgba(30, 80, 140, 0.8);
+  box-shadow: 0 0 20px #00B4D8;
+  border-color: #00EFFF;
+  transition: all 0.3s ease;
   cursor: pointer;
-  text-shadow: 0 0 8px #00bfff;
-  box-shadow: 0 0 15px rgba(0,180,255,0.2);
-  transition: all 0.2s ease;
+}
+/* ====== 新增：右侧功能卡片独立样式 ====== */
+.function-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 40px;
+}
+
+/* ====== 内部三个小卡片 ====== */
+.inner-card {
+  width: 90%;
+  margin: 15px auto;
+  padding: 25px 10px;
+  background: rgba(20, 66, 114, 0.6);
+  border: 2px solid #00B4D8;
+  border-radius: 0;
+  color: #E0F7FF;
+  font-size: 22px;
+  text-align: center;
+  box-shadow: 0 0 10px #0096C7;
+  display: block;
+  transition: all 0.3s ease;
+  .inner-card {
   white-space: nowrap;
-}
-
-/*======== 悬停高亮 ========*/
-.nav-btn:hover {
-  background: rgba(0, 100, 180, 0.8);
-  box-shadow:
-    0 0 15px rgba(0,200,255,0.5),
-    0 0 25px rgba(0,200,255,0.3);
-  transform: translateY(-2px);
-}
-
-/*======== 底部模块 ========*/
-.bottom-panel {
-  position: absolute;
-  bottom: 2vh;
-  left: 24vw;
-  width: calc(100vw - 46vw - 2vw);
-  height: 20vh;
-  background: rgba(0, 40, 80, 0.25);
-  border: 1px solid rgba(0, 200, 255, 0.2);
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 180, 255, 0.2);
-}
-
-/*======== 小屏优化 ========*/
-@media (max-width: 1200px) {
-  .nav-btn {
-    width: 12vw;
-    font-size: calc(1vw + 0.5vh);
+  overflow: hidden;
+  text-overflow: ellipsis;
   }
-  .title-col {
-    min-width: 50vw;
-  }
+
+}
+
+.top-card {
+  margin-top: 30px;
+}
+
+.middle-card {
+  margin-top: 25px;
+}
+
+.bottom-card {
+  margin-top: 25px;
+}
+
+.inner-card:hover {
+  background: rgba(30, 80, 140, 0.8);
+  box-shadow: 0 0 20px #00B4D8;
+  border-color: #00EFFF;
+  cursor: pointer;
+}
+
+#bg-stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* UI 在它上面 */
+  background: transparent;
+  pointer-events: none; /* 不影响点击 */
+}
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+/* ====== 加载动画层 ====== */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #021B79, #0575E6);
+  display: none; /* 默认隐藏 */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.loading-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: transparent;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+
+  /* --- 自适应大小 --- */
+  font-size: clamp(40px, 6vw, 120px);
+
+  /* --- 自适应位置 --- */
+  margin: auto;                   /* Flex自动居中 */
+  padding: 8vh 10vw;              /* 上下左右保持相对间距，可自行调比例 */
+  box-sizing: border-box;         /* 确保内边距不撑爆布局 */
+
+  /* --- 可选：轻微上移让视觉更平衡 --- */
+  transform: translateY(-55vh);    /* 随屏幕比例移动 */
+}
+/* ====== 统一蓝色加载层（逐字渐显版） ====== */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #021B79, #0575E6);
+  display: none; /* 默认隐藏 */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.loading-text {
+  font-size: clamp(40px, 6vw, 120px);
+  font-weight: 900;
+  color: #9FE7FF;
+  text-align: center;
+  text-shadow: 0 0 15px rgba(159, 231, 255, 0.6);
+  letter-spacing: 0.1em;
+  display: flex;
+  gap: 0.2em;
+  position: relative;
+  z-index: 2;
+}
+
+/* 每个字单独淡入动画 */
+.loading-text span {
+  opacity: 0;
+  animation: fadeInChar 0.3s ease-in forwards;
+}
+
+@keyframes fadeInChar {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

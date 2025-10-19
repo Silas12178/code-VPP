@@ -1,52 +1,79 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>虚拟电网系统终端</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全国虚拟电厂控制终端</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-  <!--======== 页面主框架 ========-->
-  <div class="layout">
-
-    <!-- 左侧模块 -->
-    <div class="left-panel"></div>
-
-    <!-- 中央区域：标题 + 时钟 -->
-    <div class="center-area">
-      <!-- 顶部头部区：左按钮组 | 标题+时钟 | 右按钮组 -->
-      <div class="header">
-        <div class="nav-col">
-          <button class="nav-btn" onclick="location.href='page1.html'">跳转一号</button>
-          <button class="nav-btn" onclick="location.href='page2.html'">跳转二号</button>
+  <canvas id="bg-stars"></canvas>
+  <div class="container">
+    <!-- ====== 左侧内容区域 ====== -->
+    <div class="left-panel">
+      <div class="left-content">
+        <h1 class="title">全国虚拟电厂控制系统</h1>
+        <div id="subtitle-bar">
+          <span id="subtitle-text">加载中...</span>
         </div>
-
-        <div class="title-col">
-          <h1>虚拟电网系统终端</h1>
-          <div id="clock"></div>
-        </div>
-
-        <div class="nav-col">
-          <button class="nav-btn" onclick="location.href='page3.html'">跳转三号</button>
-          <button class="nav-btn" onclick="location.href='page4.html'">跳转四号</button>
-        </div>
+        <div id="chinaMap" class="map-left"></div>
       </div>
     </div>
 
-    <!-- 右侧模块 -->
-    <div class="right-panel"></div>
-
-    <!-- 底部模块 -->
-    <div class="bottom-panel"></div>
+    <!-- ====== 右侧卡片区域 ====== -->
+    <div class="right-panel">
+      <div class="card-group">
+        <!-- 上方时钟卡片 -->
+        <div class="small-card">
+          <div class="clock-container">
+            <div class="clock-label">北京时间</div>
+            <div id="clock"></div>
+          </div>
+        </div>
+<!-- 中间功能卡片 -->
+<div class="large-card function-card">
+  <div class="inner-card top-card">
+    等待选择行政区
+  </div>
+  <div class="inner-card middle-card">
+    点此进入对应地区终端
+  </div>
+  <div class="inner-card bottom-card" id="github-link">
+    点此申请更高权限
+  </div>
+</div>
+        <!-- 下方关闭终端按钮 -->
+        <div class="small-card exit-card">
+          <span class="exit-text">关闭终端</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-
-    <!-- 底部模块 -->
-    <div class="bottom-panel"></div>
+  <!-- ====== 弹窗遮罩层 ====== -->
+  <div id="exit-modal" class="modal">
+    <div class="modal-content">
+      <p>是否退出终端？</p>
+      <div class="modal-buttons">
+        <button id="confirm-exit" class="modal-btn yes">是</button>
+        <button id="cancel-exit" class="modal-btn no">否</button>
+      </div>
+    </div>
   </div>
 
+  <!-- ====== 脚本顺序不能改 ====== -->
+  <script src="js/echarts.min.js"></script>
+  <script src="js/china.js"></script>
+  <script src="js/area_echarts.js"></script>
   <script src="js/main.js"></script>
+
+  <!-- ====== 加载动画层 ====== -->
+<div id="loading-overlay">
+  <canvas id="loading-stars"></canvas>
+  <div class="loading-text">人民电业为人民</div>
+  <div class="loading-ring"></div> <!-- ✅ 改成正确类名 -->
+</div>
+</div>
+
 </body>
 </html>

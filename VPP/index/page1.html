@@ -3,35 +3,130 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>页面施工中</title>
+  <title>访问受限</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /*======== 等待施工页面样式 ========*/
     body {
       margin: 0;
       padding: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at center, #001f3f, #000814);
+      overflow: hidden;
+      background: linear-gradient(135deg, #021B79, #0575E6);
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      color: #00eaff;
+      align-items: center;
       font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      color: #E0F7FF;
+      text-align: center;
+      position: relative;
     }
 
     h1 {
-      font-size: calc(3vw + 2vh);
+      font-size: clamp(28px, 5vw, 60px);
       text-shadow:
         0 0 25px #00bfff,
         0 0 40px rgba(0,180,255,0.6),
         0 0 60px rgba(0,180,255,0.3);
       letter-spacing: 8px;
       user-select: none;
+      margin-bottom: 40px;
+      z-index: 2;
+    }
+
+    button {
+      background: linear-gradient(90deg, #0466C8, #0096C7);
+      color: #E0F7FF;
+      font-size: clamp(16px, 1.3vw, 22px);
+      font-weight: bold;
+      padding: 12px 40px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,180,255,0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #0096C7, #00B4D8);
+      box-shadow: 0 0 25px rgba(0,200,255,0.6);
+    }
+
+    /* 星光背景 */
+    #bg-stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 0;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <h1>等待施工</h1>
+  <!-- 星空背景 -->
+  <canvas id="bg-stars"></canvas>
+
+  <h1 id="message">等待施工</h1>
+  <button onclick="window.location.href='index.html'">返回首页</button>
+
+  <script>
+    // === 动态显示地区 ===
+    const params = new URLSearchParams(window.location.search);
+    const region = params.get("region");
+    const message = document.getElementById("message");
+    if (region) {
+      message.textContent = `您无权访问该地区（${region}）的终端`;
+    }
+
+    // === 星空动画 ===
+    const canvas = document.getElementById("bg-stars");
+    const ctx = canvas.getContext("2d");
+    const DENSITY = 0.00012;
+    let stars = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const count = Math.floor(canvas.width * canvas.height * DENSITY);
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random(),
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let s of stars) {
+        s.x += s.vx;
+        s.y += s.vy;
+        if (s.x < 0) s.x = canvas.width;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.y < 0) s.y = canvas.height;
+        if (s.y > canvas.height) s.y = 0;
+
+        const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 2);
+        gradient.addColorStop(0, `rgba(255,255,255,${0.8 * s.alpha})`);
+        gradient.addColorStop(1, `rgba(255,255,255,0)`);
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+    draw();
+  </script>
 </body>
 </html>

@@ -3,35 +3,193 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>页面施工中</title>
+  <title>虚拟电厂终端</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /*======== 等待施工页面样式 ========*/
     body {
       margin: 0;
       padding: 0;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle at center, #001f3f, #000814);
+      overflow: hidden;
+      background: linear-gradient(135deg, #021B79, #0575E6);
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #00eaff;
       font-family: "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+      color: #E0F7FF;
     }
 
-    h1 {
-      font-size: calc(3vw + 2vh);
-      text-shadow:
-        0 0 25px #00bfff,
-        0 0 40px rgba(0,180,255,0.6),
-        0 0 60px rgba(0,180,255,0.3);
-      letter-spacing: 8px;
-      user-select: none;
+    /* 星空背景 */
+    #bg-stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* 整体分区布局 */
+    .sidebar {
+      width: 18%;
+      min-width: 200px;
+      height: 100vh;
+      background: rgba(8, 25, 58, 0.75);
+      border-right: 2px solid rgba(0, 180, 255, 0.25);
+      box-shadow: inset -3px 0 15px rgba(0, 180, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 60px;
+      z-index: 2;
+    }
+
+    .sidebar h2 {
+      font-size: clamp(16px, 1.6vw, 22px);
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px rgba(0, 200, 255, 0.6);
+    }
+
+    .sidebar button {
+      width: 80%;
+      padding: 12px 0;
+      margin: 8px 0;
+      background: rgba(0, 150, 255, 0.15);
+      color: #E0F7FF;
+      font-size: clamp(14px, 1.2vw, 18px);
+      font-weight: bold;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 180, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar button:hover {
+      background: rgba(0, 180, 255, 0.35);
+      box-shadow: 0 0 25px rgba(0, 200, 255, 0.5);
+      transform: scale(1.05);
+    }
+
+    /* 主体内容区 */
+    .main-panel {
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .main-panel h1 {
+      font-size: clamp(24px, 4vw, 60px);
+      font-weight: 900;
+      text-align: center;
+      text-shadow: 0 0 25px #00bfff, 0 0 40px rgba(0,180,255,0.6);
+      letter-spacing: 6px;
+      transform: translateY(-45vh); /* 向上移动5%屏幕高度，可调 */
+    }
+
+    .back-btn {
+      position: absolute;
+      bottom: 40px;
+      right: 60px;
+      background: linear-gradient(90deg, #0466C8, #0096C7);
+      color: #E0F7FF;
+      font-size: clamp(16px, 1.3vw, 22px);
+      font-weight: bold;
+      padding: 10px 28px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,180,255,0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: linear-gradient(90deg, #0096C7, #00B4D8);
+      box-shadow: 0 0 25px rgba(0,200,255,0.6);
     }
   </style>
 </head>
 <body>
-  <h1>等待施工</h1>
+  <canvas id="bg-stars"></canvas>
+
+  <!-- 左侧任务栏 -->
+  <div class="sidebar">
+    <h2>功能菜单</h2>
+    <button onclick="showFeature(1)">功能 1</button>
+    <button onclick="showFeature(2)">功能 2</button>
+    <button onclick="showFeature(3)">功能 3</button>
+    <button onclick="showFeature(4)">功能 4</button>
+    <button onclick="showFeature(5)">功能 5</button>
+  </div>
+
+  <!-- 主内容区域 -->
+  <div class="main-panel">
+    <h1 id="welcome">欢迎访问虚拟电厂终端</h1>
+    <button class="back-btn" onclick="window.location.href='index.html'">返回首页</button>
+  </div>
+
+  <script>
+    // 动态显示行政区
+    const params = new URLSearchParams(window.location.search);
+    const region = params.get("region");
+    const title = document.getElementById("welcome");
+    if (region) title.textContent = `欢迎访问 ${region} 虚拟电厂终端`;
+
+    // 功能按钮提示
+    function showFeature(num) {
+      alert(`功能 ${num} 暂未开放`);
+    }
+
+    // 星空动画
+    const canvas = document.getElementById("bg-stars");
+    const ctx = canvas.getContext("2d");
+    const DENSITY = 0.00012;
+    let stars = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const count = Math.floor(canvas.width * canvas.height * DENSITY);
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random(),
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let s of stars) {
+        s.x += s.vx;
+        s.y += s.vy;
+        if (s.x < 0) s.x = canvas.width;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.y < 0) s.y = canvas.height;
+        if (s.y > canvas.height) s.y = 0;
+        const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 2);
+        gradient.addColorStop(0, `rgba(255,255,255,${0.8 * s.alpha})`);
+        gradient.addColorStop(1, `rgba(255,255,255,0)`);
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+    draw();
+  </script>
 </body>
 </html>
