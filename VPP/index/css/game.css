@@ -1,0 +1,173 @@
+/* ===== 游戏主布局 ===== */
+.game-container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  padding: 3vh 3vw;
+  box-sizing: border-box;
+  color: #E0F7FF;
+  z-index: 1;
+}
+
+/* ===== 左右卡片组 ===== */
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  width: 18%;
+  min-width: 220px;
+  gap: 10px; /* 紧贴但不相黏 */
+  margin-top: -60vh;
+}
+
+/* 统一卡片大小 */
+.info-card {
+  background: rgba(10, 30, 70, 0.8);
+  border: 2px solid rgba(0, 180, 255, 0.5);
+  border-radius: 0;
+  box-shadow: 0 0 18px rgba(0, 200, 255, 0.3);
+  height: 120px;
+  width: 100%;
+  padding: 20px;
+  font-size: clamp(14px, 1.2vw, 18px);
+  color: #E0F7FF;
+  text-align: center;
+  display: flex;                /* 启用弹性布局 */
+  align-items: center;          /* 垂直居中 */
+  justify-content: center;      /* 水平居中 */
+  backdrop-filter: blur(6px);
+  transition: 0.3s ease;
+}
+
+.info-card:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+}
+
+/* ===== 中心折线图区域 ===== */
+.chart-area {
+  flex: none; /* 取消自动放大 */
+  height: 70vh; /* 缩小整体比例 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+#priceChart {
+  width: 80%;        /* ↑ 增大20%宽度 */
+  height: 50vh;      /* ↑ 提高整体高度 */
+  max-width: 1000px; /* ↑ 上限放宽 */
+  min-height: 400px; /* 保证在小窗中也清晰 */
+}
+
+
+
+
+/* ===== 坐标轴标签 ===== */
+.axis-labels {
+  position: relative;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  font-size: clamp(12px, 1vw, 16px);
+  opacity: 0.8;
+  margin-top: 5px;
+}
+
+/* ===== 交易控制区 ===== */
+.trade-panel {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px;
+}
+.slider-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.slider-box input[type="range"] {
+  width: 180px;
+}
+.button-box {
+  display: flex;
+  gap: 40px;
+}
+.button-box button {
+  background: linear-gradient(90deg, #0466C8, #0096C7);
+  color: #E0F7FF;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 28px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0,180,255,0.4);
+  transition: all 0.3s ease;
+}
+.button-box button:hover {
+  background: linear-gradient(90deg, #0096C7, #00B4D8);
+  box-shadow: 0 0 25px rgba(0,200,255,0.6);
+}
+
+/* ===== 垂直滚动新闻卡片 ===== */
+.scroll-card {
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#newsText {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.news-item {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #E0F7FF;
+  font-size: clamp(14px, 1.1vw, 18px);
+  text-shadow: 0 0 10px #00bfff;
+  opacity: 0;
+  transition: all 1.5s ease-in-out;
+  transform: translateY(120px);
+}
+/* ===== 返回上级按钮 ===== */
+.back-btn {
+  position: fixed;
+  bottom: 40px;
+  right: 60px;
+  background: linear-gradient(90deg, #0466C8, #0096C7);
+  color: #E0F7FF;
+  font-size: clamp(16px, 1.3vw, 22px);
+  font-weight: bold;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,180,255,0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 999; /* 保证在最上层 */
+}
+
+.back-btn:hover {
+  background: linear-gradient(90deg, #0096C7, #00B4D8);
+  box-shadow: 0 0 25px rgba(0,200,255,0.6);
+  transform: scale(1.05);
+}

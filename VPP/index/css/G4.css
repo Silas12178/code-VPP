@@ -1,0 +1,247 @@
+/* =================== 全局色彩与基础样式 =================== */
+:root{
+  --c-bg1:#021B79;
+  --c-bg2:#0575E6;
+  --c-cyan:#00B4D8;
+  --c-cyan-soft:rgba(0,180,255,.35);
+  --c-text:#E0F7FF;
+  --glass:rgba(10,25,60,.78);
+  --bd:rgba(0,180,255,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--c-text);
+  font-family:"Microsoft YaHei","Segoe UI",Arial,sans-serif;
+  background:linear-gradient(135deg,var(--c-bg1),var(--c-bg2));
+  overflow:hidden; /* 防止滚动条 */
+}
+
+/* =================== 星空背景 =================== */
+#bg-stars{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+}
+
+/* =================== 通用玻璃卡 =================== */
+.glass{
+  background:var(--glass);
+  border:2px solid var(--bd);
+  box-shadow:0 0 18px rgba(0,200,255,.25);
+  backdrop-filter: blur(6px);
+  position:relative;
+}
+.glass::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0; height:24px;
+  background:linear-gradient(0deg,rgba(0,200,255,0.25),rgba(0,200,255,0));
+  border-radius:0 0 16px 16px;
+  pointer-events:none;
+}
+
+/* =================== 顶部条 =================== */
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:64px; z-index:3;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 32px;
+}
+.brand{display:flex; align-items:center; gap:12px}
+.brand .dot{
+  width:10px; height:10px; border-radius:50%;
+  background:var(--c-cyan);
+  box-shadow:0 0 10px var(--c-cyan);
+}
+.topbar h1{
+  font-size:clamp(18px,2vw,26px);
+  margin:0;
+  text-shadow:0 0 18px var(--c-cyan);
+}
+.now{font-variant-numeric:tabular-nums; opacity:.9}
+
+/* =================== 主体三列网格 =================== */
+.layout{
+  position:relative; z-index:1;
+  display:grid;
+  grid-template-columns: 22% 1fr 24%;
+  grid-template-rows: 1fr 1fr;
+  gap:16px;
+  padding:88px 24px 80px;
+  height:100vh;
+}
+
+/* =================== 列内布局 =================== */
+.left-col, .center-col, .right-col{
+  display:grid;
+  grid-template-rows: 1fr 1fr;
+  gap:16px;
+}
+
+/* =================== 卡片基础 =================== */
+.card{
+  border-radius:16px;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.panel-title{
+  font-size:14px;
+  letter-spacing:2px;
+  opacity:.9;
+  margin-bottom:8px;
+  text-shadow:0 0 8px rgba(0,200,255,.35);
+}
+.panel{
+  display:flex;
+  flex-direction:column;
+}
+.panel canvas{
+  width:100% !important;
+  height:260px !important;
+  max-height:38vh;
+}
+
+/* =================== KPI 卡 =================== */
+.kpi{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+}
+.kpi-title{opacity:.85; margin-bottom:6px}
+.kpi-num{
+  font-size: clamp(22px, 2.4vw, 36px);
+  font-weight:900;
+  text-shadow:0 0 24px rgba(0,200,255,.35);
+}
+.kpi-num .unit{font-size:.6em; margin-left:6px; opacity:.8}
+.kpi-sub{margin-top:6px; font-size:13px; opacity:.9}
+.rise{color:#5CFF97}
+.warn{color:#FF8A8A}
+.ok{color:#8BE1FF}
+
+/* =================== 热度矩阵 =================== */
+.matrix{
+  flex:1;
+  display:grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-auto-rows: 1fr;
+  gap:8px;
+  padding:6px 2px 2px 2px;
+  height:clamp(200px, 30vh, 280px); /* 拉长 */
+}
+.matrix .cell{
+  border-radius:10px;
+  background:rgba(255,255,255,.04);
+  box-shadow: inset 0 0 18px rgba(255,255,255,.06),
+              0 0 10px rgba(0,200,255,.15);
+  transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.matrix .cell.on{
+  background:rgba(0,180,255,.18);
+  box-shadow: inset 0 0 18px rgba(0,200,255,.35),
+              0 0 16px rgba(0,200,255,.45);
+}
+.matrix .cell:hover{ transform:scale(1.05) }
+
+/* =================== 实时事件流 =================== */
+.scroll{ position:relative; overflow:hidden; height:100%; flex:1 1 auto; }
+.feed{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  position:absolute;
+  bottom:0;
+  width:100%;
+}
+.feed li{
+  padding:10px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 0 12px rgba(0,200,255,.15);
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .8s ease, transform .8s ease;
+}
+.feed li.show{ opacity:1; transform:translateY(0) }
+.feed .ts{
+  opacity:.7;
+  font-variant-numeric:tabular-nums;
+  margin-right:8px;
+}
+.feed-mask{
+  position:absolute;
+  left:0; right:0;
+  height:28px;
+  z-index:2;
+  pointer-events:none;
+  background:linear-gradient(180deg, rgba(2,27,121,1), rgba(2,27,121,0));
+}
+.feed-mask.bottom{ bottom:0; transform:rotate(180deg) }
+.feed-mask.top{ top:0 }
+
+/* =================== 能量流卡片 =================== */
+.energy-stats{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:bold;
+  color:#AEEBFF;
+  font-size:clamp(13px,1vw,16px);
+  text-shadow:0 0 10px rgba(0,200,255,.6);
+  margin-bottom:6px;
+}
+#energyFlow{
+  width:100%;
+  height:clamp(50px,9vh,90px); /* 压缩高度 */
+  border-radius:10px;
+  background:linear-gradient(180deg,rgba(0,40,100,.25),rgba(0,0,50,.4));
+}
+.center-col{
+  display:grid;
+  grid-template-rows: 1.1fr 1.1fr 0.8fr; /* 优化比例 */
+  gap:16px;
+}
+.center-col .panel:last-child{
+  margin-top:-4px; /* 稍微贴近上方卡片 */
+  margin-bottom:0;
+}
+
+/* =================== 返回上级按钮 =================== */
+.back-btn{
+  position:fixed;
+  right:36px;
+  bottom:36px;
+  z-index:4;
+  background:linear-gradient(90deg,#0466C8,#0096C7);
+  color:var(--c-text);
+  font-weight:bold;
+  border:none;
+  border-radius:12px;
+  padding:12px 28px;
+  cursor:pointer;
+  box-shadow:0 0 16px rgba(0,180,255,.45);
+  transition:.25s ease;
+}
+.back-btn:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 0 26px rgba(0,200,255,.6);
+}
+
+/* =================== 响应式 =================== */
+@media (max-width:1100px){
+  .layout{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    overflow:auto;
+    height:auto;
+  }
+  .left-col,.center-col,.right-col{
+    grid-template-rows: auto;
+  }
+  body{overflow:auto}
+}

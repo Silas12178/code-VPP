@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>虚拟电厂 · 数据中心 G4</title>
+  <link rel="stylesheet" href="css/G4.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <!-- 可选：若你的项目已用 main.js 提供北京时间偏移，这里一并加载 -->
+  <script src="js/main.js" defer></script>
+  <script src="js/G4.js" defer></script>
+</head>
+<body>
+  <!-- 星空背景 -->
+  <canvas id="bg-stars"></canvas>
+
+  <!-- 顶部条 -->
+  <header class="topbar glass">
+    <div class="brand">
+      <span class="dot"></span>
+      <h1>全国虚拟电厂 · 数据中心</h1>
+    </div>
+    <div class="now" id="g4-clock">--/--/-- --:--:--</div>
+  </header>
+
+  <!-- 主体三列布局 -->
+  <main class="layout">
+    <!-- 左侧：指标卡 -->
+    <section class="left-col">
+      <div class="kpi card glass">
+        <div class="kpi-title">实时总负载</div>
+        <div class="kpi-num" id="kpi-load">9,800<span class="unit"> MW</span></div>
+        <div class="kpi-sub">较 10 分钟前 <span id="kpi-load-diff" class="rise">+2.1%</span></div>
+      </div>
+      <div class="kpi card glass">
+        <div class="kpi-title">储能总量</div>
+        <div class="kpi-num" id="kpi-storage">1,350<span class="unit"> GWh</span></div>
+        <div class="kpi-sub">可用率 <span id="kpi-storage-ava" class="ok">91%</span></div>
+      </div>
+      <div class="kpi card glass">
+        <div class="kpi-title">在线节点</div>
+        <div class="kpi-num" id="kpi-nodes">148<span class="unit"> 个</span></div>
+        <div class="kpi-sub">链路稳定度 <span id="kpi-link" class="ok">99.3%</span></div>
+      </div>
+      <div class="kpi card glass">
+        <div class="kpi-title">告警事件</div>
+        <div class="kpi-num" id="kpi-alerts">1<span class="unit"> 条</span></div>
+        <div class="kpi-sub">过去 1 小时 <span id="kpi-alerts-1h" class="warn">3 条</span></div>
+      </div>
+    </section>
+
+    <!-- 中央：主图 + 矩阵 -->
+    <section class="center-col">
+      <div class="panel card glass">
+        <div class="panel-title">电力流动趋势（近 60 秒）</div>
+        <canvas id="flowChart"></canvas>
+      </div>
+
+      <div class="panel card glass">
+        <div class="panel-title">数据通道热度矩阵</div>
+        <div class="matrix" id="heat-matrix"></div>
+      </div>
+    </section>
+
+    <!-- 右侧：占比 + 事件流 -->
+    <section class="right-col">
+      <div class="panel card glass">
+        <div class="panel-title">各区负载占比</div>
+        <canvas id="sharePie"></canvas>
+      </div>
+
+      <div class="panel card glass scroll">
+        <div class="panel-title">实时事件流</div>
+        <div class="feed-mask top"></div>
+        <ul class="feed" id="event-feed">
+          <!-- JS 注入 -->
+        </ul>
+        <div class="feed-mask bottom"></div>
+      </div>
+    </section>
+  </main>
+  <!-- 新增底部能量流卡片 -->
+  <div class="panel card glass">
+    <div class="panel-title">全国能量流动态监测</div>
+    <div class="energy-stats">
+      <div>全国总出力功率：<span id="total-power">52,480</span> MW</div>
+      <div>实时调度效率：<span id="efficiency">98.7</span>%</div>
+    </div>
+    <canvas id="energyFlow"></canvas>
+  </div>
+
+
+  <!-- 返回上级 -->
+  <button class="back-btn" onclick="window.location.href='page2.html'">返回上级</button>
+</body>
+</html>

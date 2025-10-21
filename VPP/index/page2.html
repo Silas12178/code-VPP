@@ -5,6 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>虚拟电厂终端</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script src="main.js" defer></script>
+  <script>
+// ===== 星空背景层（银白光点动画） =====
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("bg-stars");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+
+  let stars = [];
+  const DENSITY = 0.00015; // 星点密度，可调高亮度
+
+  function createStars() {
+    const count = Math.floor(window.innerWidth * window.innerHeight * DENSITY);
+    stars = Array.from({ length: count }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.5,
+      baseR: Math.random() * 1.5 + 0.5,
+      alpha: Math.random(),
+      speed: (Math.random() * 0.3 + 0.1) * (Math.random() < 0.5 ? 1 : -1),
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: (Math.random() - 0.5) * 0.15
+    }));
+  }
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    createStars();
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let s of stars) {
+      s.r += s.speed * 0.02;
+      if (s.r > s.baseR * 1.8 || s.r < s.baseR * 0.5) s.speed *= -1;
+      s.x += s.vx;
+      s.y += s.vy;
+      if (s.x < 0) s.x = canvas.width;
+      if (s.x > canvas.width) s.x = 0;
+      if (s.y < 0) s.y = canvas.height;
+      if (s.y > canvas.height) s.y = 0;
+
+      const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 2);
+      gradient.addColorStop(0, `rgba(255,255,255,${0.8 * s.alpha})`);
+      gradient.addColorStop(1, `rgba(255,255,255,0)`);
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r * 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+});
+</script>
+
   <style>
     body {
       margin: 0;
@@ -18,7 +79,6 @@
       color: #E0F7FF;
     }
 
-    /* 星空背景 */
     #bg-stars {
       position: fixed;
       top: 0;
@@ -30,7 +90,6 @@
       pointer-events: none;
     }
 
-    /* 整体分区布局 */
     .sidebar {
       width: 18%;
       min-width: 200px;
@@ -73,13 +132,12 @@
       transform: scale(1.05);
     }
 
-    /* 主体内容区 */
     .main-panel {
       flex: 1;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       position: relative;
       z-index: 1;
@@ -91,7 +149,15 @@
       text-align: center;
       text-shadow: 0 0 25px #00bfff, 0 0 40px rgba(0,180,255,0.6);
       letter-spacing: 6px;
-      transform: translateY(-45vh); /* 向上移动5%屏幕高度，可调 */
+      margin-top: 6vh;
+    }
+
+    /* 电力柱状图画布 */
+    #powerChart {
+      width: 80%;
+      height: 45vh;
+      margin-top: 3vh;
+      z-index: 2;
     }
 
     .back-btn {
@@ -114,82 +180,252 @@
       background: linear-gradient(90deg, #0096C7, #00B4D8);
       box-shadow: 0 0 25px rgba(0,200,255,0.6);
     }
+    #storageCard {
+  margin-top: 2vh;
+  background: rgba(10, 25, 60, 0.9);
+  padding: 14px 40px;
+  border: 2px solid rgba(0, 180, 255, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 180, 255, 0.4);
+  color: #E0F7FF;
+  font-size: clamp(14px, 1.1vw, 18px);
+  text-align: center;
+  z-index: 3;
+}
+#chartNote {
+  position: absolute;
+  right: 15%;
+  bottom: 40vh;
+  font-size: clamp(10px, 0.9vw, 14px);
+  color: rgba(224, 247, 255, 0.75);
+  text-shadow: 0 0 6px rgba(0, 200, 255, 0.4);
+  user-select: none;
+}
+
   </style>
 </head>
 <body>
   <canvas id="bg-stars"></canvas>
 
-  <!-- 左侧任务栏 -->
   <div class="sidebar">
     <h2>功能菜单</h2>
-    <button onclick="showFeature(1)">功能 1</button>
-    <button onclick="showFeature(2)">功能 2</button>
-    <button onclick="showFeature(3)">功能 3</button>
-    <button onclick="showFeature(4)">功能 4</button>
-    <button onclick="showFeature(5)">功能 5</button>
+    <button onclick="showFeature(1)">电力调配</button>
+    <button onclick="showFeature(2)">电网管理</button>
+    <button onclick="showFeature(3)">设备管理</button>
+    <button onclick="window.location.href='G4.html'">数据中心</button>
+    <button onclick="window.location.href='G5.html'">电力市场</button>
   </div>
 
-  <!-- 主内容区域 -->
   <div class="main-panel">
     <h1 id="welcome">欢迎访问虚拟电厂终端</h1>
+    <canvas id="powerChart"></canvas>
+    <!-- 储电信息卡片 -->
+    <div id="storageCard">
+      <p id="storageText">当前理论储电：计算中...</p>
+      <p id="usableText">理论实际可用：计算中...</p>
+    </div>
+    <!-- 数据说明文字 -->
+    <div id="chartNote">该表显示数据为原始数据（无人工输配电影响）</div>
+
     <button class="back-btn" onclick="window.location.href='index.html'">返回首页</button>
   </div>
 
   <script>
-    // 动态显示行政区
+    // ========== 动态电力柱状图 ==========
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const canvas = document.getElementById("powerChart");
+      const ctx = canvas.getContext("2d");
+
+      // 自适应画布分辨率
+      function resizeCanvas() {
+        canvas.width = canvas.clientWidth * window.devicePixelRatio;
+        canvas.height = canvas.clientHeight * window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      }
+      resizeCanvas();
+      window.addEventListener("resize", () => {
+        resizeCanvas();
+        render(); // 自动重绘
+      });
+
+
+      // 控制整体比例
+      const chartScale = 1.0; // 主人可调整 0.8~1.5 之间改变整体大小
+
+      const W = canvas.clientWidth;
+      const H = canvas.clientHeight;
+      const padding = 60 * chartScale;
+
+      const x0 = padding;
+      const y0 = H / 2; // Y=0 中线
+      const xStep = (W - 2 * padding) / 24;
+      const yScale = (H / 2 - padding) / 100; // 每100千亿千瓦时高度
+
+      // 当前小时（取北京时间）
+      const now = new Date(Date.now() + (window.offsetMs || 0));
+      const currentHour = now.getHours();
+
+// 改进版：符合 VPP 特性（上午储电，正午光伏发电抵消负载，全天略盈余）
+function powerAtHour(h) {
+  let value = 0;
+  if (h >= 0 && h < 7) {          // 凌晨阶段：风电储能为主
+    value = 40 + Math.random() * 40;        // +40~+80
+  } else if (h >= 7 && h < 10) {  // 早高峰：消耗上升但仍略有储电
+    value = 10 + Math.random() * 30;        // +10~+40
+  } else if (h >= 10 && h < 15) { // 正午：光伏发电抵消负载，可能转为轻度输出
+    value = -10 + Math.random() * 20;       // -10~+10
+  } else if (h >= 15 && h < 18) { // 午后：光伏减弱、工业仍高耗，轻负
+    value = -30 + Math.random() * 20;       // -30~-10
+  } else if (h >= 18 && h < 21) { // 傍晚高峰：居民用电增加但储能介入
+    value = -20 + Math.random() * 40;       // -20~+20
+  } else {                      // 夜间：重新充电储能
+    value = 30 + Math.random() * 50;        // +30~+80
+  }
+  // 加随机扰动增强动态感
+  value += (Math.random() - 0.5) * 10;
+  return Math.max(-100, Math.min(100, value));
+}
+
+      // 生成数据
+      const values = [];
+      for (let h = 0; h <= currentHour; h++) {
+        values.push(powerAtHour(h));
+      }
+
+      // 累计储电量
+      window.totalStorage = values.reduce((a, b) => a + b, 0);
+
+      // 绘制背景网格
+      function drawGrid() {
+        ctx.save();
+        ctx.strokeStyle = "rgba(0,180,255,0.25)";
+        ctx.lineWidth = 1;
+
+        // 横线
+        for (let i = -100; i <= 100; i += 10) {
+          const y = y0 - i * yScale;
+          ctx.beginPath();
+          ctx.moveTo(x0, y);
+          ctx.lineTo(W - padding, y);
+          ctx.stroke();
+        }
+
+        // 竖线
+        for (let h = 0; h <= 24; h++) {
+          const x = x0 + h * xStep;
+          ctx.beginPath();
+          ctx.moveTo(x, padding / 2);
+          ctx.lineTo(x, H - padding / 2);
+          ctx.stroke();
+        }
+
+        // 坐标轴
+        ctx.strokeStyle = "#00bfff";
+        ctx.lineWidth = 2;
+        ctx.shadowColor = "#00bfff";
+        ctx.shadowBlur = 10;
+
+        // X轴
+        ctx.beginPath();
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(W - padding, y0);
+        ctx.stroke();
+
+        // Y轴
+        ctx.beginPath();
+        ctx.moveTo(x0, padding / 2);
+        ctx.lineTo(x0, H - padding / 2);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      // 绘制柱状图
+      function drawBars() {
+        const barWidth = xStep * 0.5 * chartScale;
+
+        values.forEach((v, i) => {
+          const x = x0 + i * xStep + xStep / 4;
+          const y = y0;
+          const height = v * yScale;
+
+          ctx.save();
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = v >= 0 ? "#00bfff" : "#ff4b4b";
+          ctx.fillStyle = v >= 0 ? "#00bfff" : "#ff4b4b";
+
+          ctx.beginPath();
+          if (v >= 0) {
+            ctx.fillRect(x, y - height, barWidth, height);
+          } else {
+            ctx.fillRect(x, y, barWidth, -height);
+          }
+          ctx.closePath();
+          ctx.restore();
+        });
+      }
+
+      // 绘制坐标标签
+      function drawLabels() {
+        ctx.save();
+        ctx.fillStyle = "#E0F7FF";
+        ctx.font = `${12 * chartScale}px "Microsoft YaHei"`;
+        ctx.textAlign = "center";
+        // ===== 添加纵轴单位标识 =====
+ctx.save();
+ctx.fillStyle = "#00bfff";
+ctx.font = `${14 * chartScale}px "Microsoft YaHei"`;
+ctx.textAlign = "left";
+ctx.shadowColor = "#00bfff";
+ctx.shadowBlur = 10;
+ctx.fillText("单位：千亿千瓦时", x0 + 10, padding);
+ctx.restore();
+
+
+        for (let h = 0; h <= 24; h += 2) {
+          const x = x0 + h * xStep + xStep / 4;
+          ctx.fillText(`${h}h`, x, y0 + 20 * chartScale);
+        }
+
+        ctx.textAlign = "right";
+        for (let i = -100; i <= 100; i += 20) {
+          const y = y0 - i * yScale;
+          ctx.fillText(`${i}`, x0 - 10, y + 4);
+        }
+        ctx.restore();
+      }
+      // 主绘制流程
+      function render() {
+        ctx.clearRect(0, 0, W, H);
+        drawGrid();
+        drawBars();
+        drawLabels();
+      }
+
+      render();
+      // ===== 在图表渲染完成后更新储电信息 =====
+const storageText = document.getElementById("storageText");
+const usableText = document.getElementById("usableText");
+
+const total = window.totalStorage.toFixed(1);
+const lossRatio = 0.85 + Math.random() * 0.1; // 85%~95%随机损耗
+const usable = (total * lossRatio).toFixed(1);
+
+storageText.textContent = `当前理论储电：${total} 千亿千瓦时`;
+usableText.textContent = `理论实际可用：${usable} 千亿千瓦时`;
+
+    });
+
+    // ========== 行政区名动态显示 ==========
     const params = new URLSearchParams(window.location.search);
     const region = params.get("region");
     const title = document.getElementById("welcome");
     if (region) title.textContent = `欢迎访问 ${region} 虚拟电厂终端`;
 
-    // 功能按钮提示
     function showFeature(num) {
       alert(`功能 ${num} 暂未开放`);
     }
-
-    // 星空动画
-    const canvas = document.getElementById("bg-stars");
-    const ctx = canvas.getContext("2d");
-    const DENSITY = 0.00012;
-    let stars = [];
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const count = Math.floor(canvas.width * canvas.height * DENSITY);
-      stars = Array.from({ length: count }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 1.5 + 0.5,
-        alpha: Math.random(),
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: (Math.random() - 0.5) * 0.15
-      }));
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let s of stars) {
-        s.x += s.vx;
-        s.y += s.vy;
-        if (s.x < 0) s.x = canvas.width;
-        if (s.x > canvas.width) s.x = 0;
-        if (s.y < 0) s.y = canvas.height;
-        if (s.y > canvas.height) s.y = 0;
-        const gradient = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 2);
-        gradient.addColorStop(0, `rgba(255,255,255,${0.8 * s.alpha})`);
-        gradient.addColorStop(1, `rgba(255,255,255,0)`);
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r * 2, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      requestAnimationFrame(draw);
-    }
-
-    window.addEventListener("resize", resize);
-    resize();
-    draw();
   </script>
 </body>
 </html>

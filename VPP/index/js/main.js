@@ -242,17 +242,38 @@ document.addEventListener("DOMContentLoaded", () => {
     draw();
     window.addEventListener("resize", resize);
 
-    // === 渐显动画逻辑 ===
-    const phrase = "人民电业为人民";
-    text.textContent = "";
-    const chars = phrase.split("");
-    chars.forEach((char, i) => {
-      const span = document.createElement("span");
-      span.textContent = char;
-      span.style.animationDelay = `${i * 0.5}s`;
-      text.appendChild(span);
-    });
+    // === 从左至右扫光渐显动画逻辑 ===
+const phrase = "人民电业为人民";
+text.innerHTML = ""; // 清空旧内容
+const chars = phrase.split("");
 
+chars.forEach((char, i) => {
+  const span = document.createElement("span");
+  span.textContent = char;
+  span.style.display = "inline-block";
+  span.style.opacity = "0";
+  span.style.transform = "translateX(-30px)";
+  span.style.animation = "slideIn 0.8s ease forwards";
+  span.style.animationDelay = `${i * 0.3}s`; // 每个字依次延迟
+  text.appendChild(span);
+});
+
+// 定义动画样式
+const style = document.createElement("style");
+style.textContent = `
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+    filter: brightness(2);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    filter: brightness(1);
+  }
+}`;
+document.head.appendChild(style);
     // 5 秒后跳转 page2.html
     setTimeout(() => {
       window.location.href = `page2.html?region=${encodeURIComponent(province)}`;

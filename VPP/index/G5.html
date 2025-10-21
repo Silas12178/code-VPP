@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>电力交易模拟 - 虚拟电厂终端</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/game.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/game.js" defer></script>
+</head>
+<body>
+  <canvas id="bg-stars"></canvas>
+
+  <div class="game-container">
+    <!-- 左侧信息卡片 -->
+    <div class="info-panel left">
+      <div class="info-card" id="profitCard">当前收益：0 亿能量币</div>
+      <div class="info-card" id="capacityCard">可交易电量：300 百亿千瓦时</div>
+    </div>
+
+    <!-- 中心折线图区域 -->
+    <div class="chart-area">
+      <h1 class="chart-title">实时电价走势</h1>
+      <canvas id="priceChart"></canvas>
+      <div class="axis-labels">
+        <span class="x-label">时间（秒）</span>
+        <span class="y-label">电价（元 / 百亿千瓦时）</span>
+      </div>
+
+      <div class="trade-panel">
+        <div class="slider-box">
+          <label>交易电量：</label>
+          <input type="range" id="tradeSlider" min="0" max="300" value="50" step="10">
+          <input type="number" id="tradeInput" min="0" max="300" value="50" step="10">
+          <span>百亿千瓦时</span>
+        </div>
+        <div class="button-box">
+          <button id="buyBtn">买入</button>
+          <button id="sellBtn">卖出</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧信息卡片 -->
+    <div class="info-panel right">
+      <div class="info-card" id="priceCard">当前电价：-- 元/百亿千瓦时</div>
+      <div class="info-card scroll-card" id="newsCard">
+        <div id="newsText">市场加载中...</div>
+      </div>
+    </div>
+  </div>
+  <!-- 返回上级按钮 -->
+<button class="back-btn" onclick="window.location.href='page2.html'">返回上级</button>
+</body>
+</html>
